@@ -1,0 +1,6 @@
+#! /bin/bash -x
+
+#CONSTANTS
+START=0;
+FINAL=100;
+PLAYER=1;
