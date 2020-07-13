@@ -16,7 +16,7 @@ declare -a playerSteps;
 position=0;
 player=0;
 
-#echo "*****************************************************WELCOME TO SNAKE AND LADDERS***********************************";
+echo "*****************************************************WELCOME TO SNAKE AND LADDERS***********************************";
 function playerMovement(){
 
 while [[ $player -lt $FINAL ]]
@@ -33,14 +33,14 @@ do
 							$LADDER)
 										playerSteps[((position++))]=$diceRoll;
 										echo "Yaayyy!! You encountered Ladder";
-										echo "You will move up by: " $diceRoll;
 										player=$(($player + $diceRoll));
 
 										if [[ $player -gt $FINAL ]]
 										then
 											player=$(($player-$diceRoll));
+											echo "You can't move to 100";
 										else
-											echo "New Position: " $player
+											echo "You will move up by: " $diceRoll;
 										fi;;
 
 							$SNAKE)
@@ -52,9 +52,6 @@ do
 										if [[ $player -lt 0 ]]
                               then
                                  player=0;
-											echo "New Position: " $player;
-                              else
-                                 echo "New Position: " $player;
                               fi;;
 
 
@@ -62,6 +59,9 @@ do
 										echo "Wrong Play";;
 
 		esac
+
+	echo "Current position of Player: " $player;
+
 done
 }
 
@@ -73,8 +73,18 @@ function playerWins(){
           echo "Congratulations! You WON.";
     fi
 }
-#echo "number of steps: " ${#playerSteps[@]}
 
+function diceCountsAndPositions(){
+
+playerStepsLength=${#playerSteps[@]};
+echo "number of steps: " $playerStepsLength;
+#for((index=0;index<$playerStepsLength;index++))
+#do
+#	echo "Dice Rolls: " ${playerSteps[index]};
+#done
+
+}
 
 playerMovement
 playerWins
+diceCountsAndPositions
