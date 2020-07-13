@@ -9,7 +9,7 @@ LADDER=1;
 SNAKE=2;
 
 #ARRAYS
-declare -a playerSteps[];
+declare -a playerSteps;
 
 #VARIABLES;
 position=0;
@@ -37,7 +37,7 @@ do
 
 										if [[ $player -gt $FINAL ]]
 										then
-											player=100;
+											player=$(($player-$diceRoll));
 										else
 											echo "New Position: " $player
 										fi;;
