@@ -28,7 +28,8 @@ do
 	moves=$((RANDOM%3))
 		case $moves in $NO_PLAY)
 										echo "NO movements!";
-										player=$(($player + 0));;
+										player=$(($player + 0));
+										echo "Current position of Player: " $player;;
 
 							$LADDER)
 										playerSteps[((position++))]=$diceRoll;
@@ -39,20 +40,28 @@ do
 										then
 											player=$(($player-$diceRoll));
 											echo "You can't move to 100";
+											echo "Current position of Player: " $player;
 										else
 											echo "You will move up by: " $diceRoll;
-										fi;;
+											echo "Current position of Player: " $player;
+										fi
+										
+										echo "You get one more chance!"
+										playerMovement;;
 
 							$SNAKE)
 										playerSteps[((position++))]=$diceRoll;
 										echo "Hisss!! You met Snake";
 										echo "You will move down by: "$diceRoll;
 										player=$(($player - $diceRoll));
-
 										if [[ $player -lt 0 ]]
                               then
                                  player=0;
+											echo "Current position of Player: " $player;
+										else
+											echo "Current position of Player: " $player;
                               fi;;
+										#switchPlayer;;
 
 
 									*)
@@ -60,7 +69,7 @@ do
 
 		esac
 
-	echo "Current position of Player: " $player;
+	#echo "Current position of Player: " $player;
 
 done
 }
@@ -72,8 +81,12 @@ function playerWins(){
           echo "You reached the 100";
           echo "Congratulations! You WON.";
     fi
+playerStepsLength=${#playerSteps[@]};
+echo "number of steps: " $playerStepsLength;
+
 }
 
+: '
 function diceCountsAndPositions(){
 
 playerStepsLength=${#playerSteps[@]};
@@ -85,6 +98,13 @@ echo "number of steps: " $playerStepsLength;
 
 }
 
+:
+function player1(){
+	echo "player1 turn";
+	
+}
+
+'
 playerMovement
 playerWins
-diceCountsAndPositions
+#diceCountsAndPositions
