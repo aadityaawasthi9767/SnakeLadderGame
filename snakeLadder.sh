@@ -1,7 +1,6 @@
-#! /bin/bash 
+#! /bin/bash -x
 
 #CONSTANTS
-
 
 START=0;
 FINAL=100;
@@ -10,101 +9,116 @@ LADDER=1;
 SNAKE=2;
 
 #ARRAYS
-declare -a playerSteps;
+declare -a player1Steps;
+declare -a player2Steps;
+declare -a countLadder;
 
 #VARIABLES;
-position=0;
-player=0;
+counterPlayer1=0;
+counterplayer2=0;
+player1=0;
+player2=0
+rapid=1;
 
 echo "*****************************************************WELCOME TO SNAKE AND LADDERS***********************************";
+
 function playerMovement(){
 
-while [[ $player -lt $FINAL ]]
+diceRoll=$1
+while [[ $player1 -lt $FINAL || $player2 -lt $FINAL ]]
 do
 
-	diceRoll=$((RANDOM%6 + 1));
-	echo "Dice Roll:" $diceRoll;
+   moves=$((RANDOM%3))
+      case $moves in $NO_PLAY)
+                           echo "No MOvement";;
 
-	moves=$((RANDOM%3))
-		case $moves in $NO_PLAY)
-										echo "NO movements!";
-										player=$(($player + 0));
-										echo "Current position of Player: " $player;;
+                     $LADDER)
+                           dump=$(ladderCalling $1)
+                           diceRollAgain=$((RANDOM%6 + 1));
+                           trashLadder=$(playerMovement $diceRollAgain);;
 
-							$LADDER)
-										playerSteps[((position++))]=$diceRoll;
-										echo "Yaayyy!! You encountered Ladder";
-										player=$(($player + $diceRoll));
+                     $SNAKE)
+                           trashSnake=$(snakeCalling $1)
+                           switchPlayer;;
+ *)
+                           echo "Wrong Play";;
 
-										if [[ $player -gt $FINAL ]]
-										then
-											player=$(($player-$diceRoll));
-											echo "You can't move to 100";
-											echo "Current position of Player: " $player;
-										else
-											echo "You will move up by: " $diceRoll;
-											echo "Current position of Player: " $player;
-										fi
-										
-										echo "You get one more chance!"
-										playerMovement;;
-
-							$SNAKE)
-										playerSteps[((position++))]=$diceRoll;
-										echo "Hisss!! You met Snake";
-										echo "You will move down by: "$diceRoll;
-										player=$(($player - $diceRoll));
-										if [[ $player -lt 0 ]]
-                              then
-                                 player=0;
-											echo "Current position of Player: " $player;
-										else
-											echo "Current position of Player: " $player;
-                              fi;;
-										#switchPlayer;;
-
-
-									*)
-										echo "Wrong Play";;
-
-		esac
-
-	#echo "Current position of Player: " $player;
-
+      esac
 done
 }
 
 function playerWins(){
-	 if [[ $player -eq $FINAL ]]
-		then
-			 echo "**************************************************************************";
-          echo "You reached the 100";
+    if [[ $player -eq $FINAL ]]
+      then
           echo "Congratulations! You WON.";
     fi
-playerStepsLength=${#playerSteps[@]};
-echo "number of steps: " $playerStepsLength;
-
 }
 
-: '
-function diceCountsAndPositions(){
 
-playerStepsLength=${#playerSteps[@]};
-echo "number of steps: " $playerStepsLength;
-#for((index=0;index<$playerStepsLength;index++))
-#do
-#	echo "Dice Rolls: " ${playerSteps[index]};
-#done
-
-}
-
-:
 function player1(){
-	echo "player1 turn";
-	
+   echo "player1 turn";
+   diceRoll=$((RANDOM%6 + 1));
+   result=$(playerMovement $diceRoll);
+   player1Steps[((counterPlayer1++))]=$diceRoll;
+   playerWins
+
 }
 
-'
-playerMovement
-playerWins
-#diceCountsAndPositions
+function player2(){
+   echo "player2 turn";
+   diceRoll=$((RANDOM%6 + 1));
+   result=$(playerMovement $diceRoll);
+#  echo "result carrying variable: " $result;
+   player2Steps[((counterPlayer2++))]=$diceRoll;
+   playerWins
+}
+
+function switchPlayer(){
+while [[ 1 ]]
+do
+   switch=$((radip++%2))
+	if [[ $switch -eq 0 ]]
+then
+      player1
+   else
+      player2
+   fi
+done
+}
+
+function ladderCalling(){
+
+diceRoll=$1
+echo "Yaayyy!! You encountered Ladder";
+
+player=$(($player + $diceRoll));
+
+ if [[ $player -gt $FINAL ]]
+    then
+       player=$(($player - $diceRoll));
+       echo "You can't move to 100";
+ else
+       echo "You will move up by: " $diceRoll;
+ fi
+echo "Current position of Player: " $player;
+}
+
+function snakeCalling(){
+
+diceRoll=$1
+echo "Hisss!! You met Snake, You will move down by: " $diceRoll";
+player=$(($player - $diceRoll));
+if [[ $player -lt 0 ]]
+   then
+      player=0;
+fi
+echo "Current position of Player: " $player;
+
+}
+
+
+#----------------------------------------------------------------------------------------------------------------------------
+
+
+switchPlayer
+
